@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": ""
-  }
+    "default": "cv-ceo-pacientum"
+  },
+  "targets": {},
+  "etags": {}
 }
