@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "cv-ceo-pacientum"
+    "default": "cv-ceo-pacientum",
+    "prod": "ceo-pacientum-cv"
   },
   "targets": {},
   "etags": {}

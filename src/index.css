@@ -65,3 +65,20 @@ h3 {
   transform: translateX(-50%);
   z-index: 40;
 }
+
+@media print {
+  .vault-protected {
+    display: none !important;
+  }
+
+  body::after {
+    content: 'ACCESO DENEGADO: Propiedad Intelectual de Paciéntum. Documento protegido contra impresión.';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: monospace;
+  }
+}
