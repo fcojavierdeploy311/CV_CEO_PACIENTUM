@@ -109,30 +109,6 @@ export default function TheVault() {
     return (
         <div className="vault-protected flex flex-col gap-8 w-full animate-in fade-in duration-700">
 
-            {/* SECURITY BANNER */}
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start gap-4 shadow-[0_0_30px_rgba(239,68,68,0.1)]">
-                <span className="material-symbols-outlined text-red-400 text-3xl">lock</span>
-                <div className="flex-1">
-                    <h2 className="text-red-400 font-bold text-lg" style={{ fontFamily: 'Space Grotesk' }}>
-                        BÓVEDA DE SOLO LECTURA
-                    </h2>
-                    <p className="text-red-300/80 text-sm mt-1">
-                        Descarga e impresión deshabilitadas bajo protocolos de Propiedad Intelectual.
-                        Cualquier intento de extracción está estrictamente monitoreado.
-                    </p>
-                </div>
-                {currentUser && (
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-slate-500 hover:text-red-400 text-xs border border-slate-800 hover:border-red-500/30 rounded-lg transition-all duration-200 shrink-0"
-                        title={`Cerrar sesión (${currentUser.email})`}
-                    >
-                        <span className="material-symbols-outlined text-[14px]">logout</span>
-                        Salir
-                    </button>
-                )}
-            </div>
-
             <header className="border-b border-slate-800 pb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                 <div>
                     <h1 className="text-4xl text-white font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk' }}>
@@ -142,15 +118,27 @@ export default function TheVault() {
                         Repositorio central de certificaciones y avales técnicos (Total: {allCertificates.length} registros).
                     </p>
                 </div>
-                {currentUser && (
-                    <button
-                        onClick={handleOpenNewUpload}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-sm rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/20 whitespace-nowrap"
-                    >
-                        <span className="material-symbols-outlined text-lg">upload_file</span>
-                        Subir Certificado
-                    </button>
-                )}
+                <div className="flex items-center gap-2">
+                    {currentUser && (
+                        <>
+                            <button
+                                onClick={handleOpenNewUpload}
+                                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-sm rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/20 whitespace-nowrap"
+                            >
+                                <span className="material-symbols-outlined text-lg">upload_file</span>
+                                Subir Certificado
+                            </button>
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center gap-1.5 px-3 py-2.5 text-slate-500 hover:text-red-400 text-xs border border-slate-800 hover:border-red-500/30 rounded-xl transition-all duration-200 shrink-0"
+                                title={`Cerrar sesión (${currentUser.email})`}
+                            >
+                                <span className="material-symbols-outlined text-[14px]">logout</span>
+                                Salir
+                            </button>
+                        </>
+                    )}
+                </div>
             </header>
 
             {/* FILTERS */}
@@ -188,8 +176,8 @@ export default function TheVault() {
                             key={cert.id}
                             onClick={() => handleCardClick(cert)}
                             className={`group relative bg-[#0d131f] border rounded-xl overflow-hidden transition-all duration-300 ${hasPdf
-                                    ? 'border-slate-800 hover:border-blue-500/50 cursor-pointer hover:shadow-[0_0_25px_rgba(59,130,246,0.15)]'
-                                    : 'border-slate-800/50 hover:border-slate-700'
+                                ? 'border-slate-800 hover:border-blue-500/50 cursor-pointer hover:shadow-[0_0_25px_rgba(59,130,246,0.15)]'
+                                : 'border-slate-800/50 hover:border-slate-700'
                                 }`}
                         >
                             {/* IMAGE / THUMBNAIL CONTAINER */}
