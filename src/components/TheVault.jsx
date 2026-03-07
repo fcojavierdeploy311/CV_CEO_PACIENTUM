@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
-import { getCertificates } from '../services/certificateService';
+import { getCertificates, toggleCertificateVisibility, deleteCertificate } from '../services/certificateService';
 import { getCloudinaryThumbnailUrl } from '../services/cloudinaryService';
 import UploadCertificateModal from './UploadCertificateModal';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 import PdfViewerModal from './PdfViewerModal';
 import AuthModal from './AuthModal';
 
@@ -20,6 +21,9 @@ export default function TheVault() {
     const [currentUser, setCurrentUser] = useState(null);
     // PDF Viewer
     const [viewerCert, setViewerCert] = useState(null);
+    // State Management
+    const [showHidden, setShowHidden] = useState(false);
+    const [deletingCert, setDeletingCert] = useState(null);
 
     // Track authentication state
     useEffect(() => {
@@ -48,9 +52,14 @@ export default function TheVault() {
 
     const allCertificates = firestoreCerts;
 
-    const filteredData = filter === 'Todos'
+    // Public filter: hide invisible certs unless admin toggled showHidden
+    const visibleCertificates = currentUser && showHidden
         ? allCertificates
-        : allCertificates.filter(item => item.category === filter);
+        : allCertificates.filter(cert => cert.isVisible !== false);
+
+    const filteredData = filter === 'Todos'
+        ? visibleCertificates
+        : visibleCertificates.filter(item => item.category === filter);
 
     function handleUploadSuccess() {
         setEditingCert(null);
@@ -101,9 +110,28 @@ export default function TheVault() {
     async function handleLogout() {
         try {
             await signOut(auth);
+            setShowHidden(false);
         } catch (err) {
             console.error('Error al cerrar sesión:', err);
         }
+    }
+
+    async function handleToggleVisibility(e, cert) {
+        e.stopPropagation();
+        try {
+            const current = cert.isVisible !== false; // default true for old docs
+            await toggleCertificateVisibility(cert.id, current);
+            loadFirestoreCerts();
+        } catch (err) {
+            console.error('Error al cambiar visibilidad:', err);
+        }
+    }
+
+    async function handleDeleteConfirm() {
+        if (!deletingCert) return;
+        await deleteCertificate(deletingCert.id);
+        setDeletingCert(null);
+        loadFirestoreCerts();
     }
 
     return (
@@ -121,6 +149,22 @@ export default function TheVault() {
                 <div className="flex items-center gap-2">
                     {currentUser && (
                         <>
+                            {/* Admin: Show hidden toggle */}
+                            <label className="flex items-center gap-2 px-3 py-2 text-xs border border-slate-800 rounded-xl cursor-pointer select-none transition-all duration-200 hover:border-slate-600 shrink-0">
+                                <span className={`material-symbols-outlined text-[14px] ${showHidden ? 'text-amber-400' : 'text-slate-600'}`}>
+                                    {showHidden ? 'visibility' : 'visibility_off'}
+                                </span>
+                                <span className={`${showHidden ? 'text-amber-300' : 'text-slate-500'}`}>
+                                    {showHidden ? 'Ocultos visibles' : 'Mostrar ocultos'}
+                                </span>
+                                <div
+                                    onClick={() => setShowHidden(prev => !prev)}
+                                    className={`relative w-8 h-4.5 rounded-full transition-colors duration-200 ${showHidden ? 'bg-amber-500/40' : 'bg-slate-700'}`}
+                                >
+                                    <div className={`absolute top-0.5 w-3.5 h-3.5 rounded-full transition-all duration-200 ${showHidden ? 'left-4 bg-amber-400' : 'left-0.5 bg-slate-500'}`} />
+                                </div>
+                            </label>
+
                             <button
                                 onClick={handleOpenNewUpload}
                                 className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-sm rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/20 whitespace-nowrap"
@@ -170,12 +214,13 @@ export default function TheVault() {
                 {filteredData.map(cert => {
                     const hasPdf = Boolean(cert.fileUrl);
                     const thumbnailUrl = getCloudinaryThumbnailUrl(cert.fileUrl);
+                    const isHidden = cert.isVisible === false;
 
                     return (
                         <div
                             key={cert.id}
                             onClick={() => handleCardClick(cert)}
-                            className={`group relative bg-[#0d131f] border rounded-xl overflow-hidden transition-all duration-300 ${hasPdf
+                            className={`group relative bg-[#0d131f] border rounded-xl overflow-hidden transition-all duration-300 ${isHidden ? 'opacity-50 ring-1 ring-amber-500/20' : ''} ${hasPdf
                                 ? 'border-slate-800 hover:border-blue-500/50 cursor-pointer hover:shadow-[0_0_25px_rgba(59,130,246,0.15)]'
                                 : 'border-slate-800/50 hover:border-slate-700'
                                 }`}
@@ -231,6 +276,14 @@ export default function TheVault() {
                                         Alto Impacto
                                     </div>
                                 )}
+
+                                {/* HIDDEN BADGE */}
+                                {isHidden && (
+                                    <div className="absolute top-3 left-3 bg-amber-500/20 backdrop-blur-sm border border-amber-500/30 text-amber-300 text-xs px-2 py-1 rounded shadow-lg z-40 flex items-center gap-1">
+                                        <span className="material-symbols-outlined text-[14px]">visibility_off</span>
+                                        Oculto
+                                    </div>
+                                )}
                             </div>
 
                             {/* METADATA */}
@@ -254,6 +307,35 @@ export default function TheVault() {
                                         <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 bg-slate-800 rounded text-slate-300">
                                             {cert.hours} {typeof cert.hours === 'string' && cert.hours.includes('hrs') ? '' : 'hrs'}
                                         </span>
+
+                                        {/* Admin controls — only visible when logged in */}
+                                        {currentUser && (
+                                            <>
+                                                {/* VISIBILITY TOGGLE */}
+                                                <button
+                                                    onClick={(e) => handleToggleVisibility(e, cert)}
+                                                    className={`p-1.5 rounded-lg border transition-all duration-200 opacity-0 group-hover:opacity-100 ${isHidden
+                                                            ? 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/20 hover:border-amber-500/40 text-amber-400 hover:text-amber-300'
+                                                            : 'bg-slate-800/50 hover:bg-slate-700/50 border-slate-700 hover:border-slate-600 text-slate-400 hover:text-white'
+                                                        }`}
+                                                    title={isHidden ? 'Hacer visible' : 'Ocultar certificado'}
+                                                >
+                                                    <span className="material-symbols-outlined text-[16px]">
+                                                        {isHidden ? 'visibility' : 'visibility_off'}
+                                                    </span>
+                                                </button>
+
+                                                {/* DELETE BUTTON */}
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); setDeletingCert(cert); }}
+                                                    className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 text-red-400 hover:text-red-300 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                                                    title="Eliminar certificado"
+                                                >
+                                                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                                                </button>
+                                            </>
+                                        )}
+
                                         {/* EDIT BUTTON */}
                                         <button
                                             onClick={(e) => handleEdit(e, cert)}
@@ -310,6 +392,14 @@ export default function TheVault() {
                 onClose={() => setViewerCert(null)}
                 fileUrl={viewerCert?.fileUrl}
                 title={viewerCert?.title}
+            />
+
+            {/* Confirm Delete Modal */}
+            <ConfirmDeleteModal
+                isOpen={Boolean(deletingCert)}
+                onClose={() => setDeletingCert(null)}
+                onConfirm={handleDeleteConfirm}
+                certTitle={deletingCert?.title || ''}
             />
 
         </div>

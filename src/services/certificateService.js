@@ -5,6 +5,7 @@ import {
     getDocs,
     doc,
     updateDoc,
+    deleteDoc,
     writeBatch,
     query,
     orderBy,
@@ -57,6 +58,8 @@ export async function saveCertificate({
         fileUrl,
         cloudinaryPublicId,
         originalFilename,
+        isVisible: true,
+        isDeleted: false,
         createdAt: serverTimestamp(),
     };
 
@@ -100,6 +103,33 @@ export async function updateCertificate(id, data) {
 }
 
 /**
+ * Toggles the visibility of a certificate (isVisible).
+ *
+ * @param {string} id - Firestore document ID
+ * @param {boolean} currentVisibility - Current isVisible value
+ * @returns {Promise<void>}
+ */
+export async function toggleCertificateVisibility(id, currentVisibility) {
+    const docRef = doc(db, COLLECTION_NAME, id);
+    await updateDoc(docRef, {
+        isVisible: !currentVisibility,
+        updatedAt: serverTimestamp(),
+    });
+}
+
+/**
+ * Permanently deletes a certificate document from Firestore.
+ * Note: The associated Cloudinary file is NOT deleted (requires backend).
+ *
+ * @param {string} id - Firestore document ID
+ * @returns {Promise<void>}
+ */
+export async function deleteCertificate(id) {
+    const docRef = doc(db, COLLECTION_NAME, id);
+    await deleteDoc(docRef);
+}
+
+/**
  * Migra un array de certificados estáticos a Firestore usando batch write.
  * Cada entrada recibe un createdAt automático. El campo `id` del dato
  * estático se ignora (Firestore genera su propio ID).
@@ -123,6 +153,8 @@ export async function migrateStaticCertificates(certs) {
             fileUrl: certData.fileUrl || '',
             cloudinaryPublicId: certData.cloudinaryPublicId || '',
             originalFilename: certData.originalFilename || '',
+            isVisible: true,
+            isDeleted: false,
             createdAt: serverTimestamp(),
         });
     }
