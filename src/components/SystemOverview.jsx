@@ -59,44 +59,52 @@ export default function SystemOverview() {
                 {/* Status Badge */}
                 <div className="flex items-center gap-3">
                     <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
                     </span>
-                    <span className="text-xs font-mono text-emerald-400 tracking-widest uppercase">
-                        SYSTEM.STATUS: ONLINE // QA LEAD & ARCHITECT
+                    <span className="text-xs font-mono text-blue-400 tracking-widest uppercase">
+                        Disponible para Liderazgo Tech & Salud
                     </span>
                 </div>
 
                 {/* Main Title */}
                 <h1
-                    className="text-5xl md:text-7xl lg:text-8xl text-white font-extrabold leading-[0.95] tracking-tight max-w-4xl"
+                    className="text-4xl md:text-5xl lg:text-6xl text-white font-extrabold leading-[1.1] tracking-tight max-w-4xl"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                 >
-                    Ingeniería Clínica{' '}
-                    <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                        Transformada
-                    </span>{' '}
-                    en Código.
+                    Q. Francisco Javier{' '}
+                    <span className="block mt-2 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent text-3xl md:text-4xl lg:text-5xl">
+                        HealthTech Architect & Clinical Operations Leader
+                    </span>
                 </h1>
 
                 {/* Subtitle */}
-                <p className="text-slate-400 text-lg md:text-xl leading-relaxed max-w-2xl" style={{ fontFamily: 'Inter, sans-serif' }}>
-                    Diseño ecosistemas digitales inmutables que blindan laboratorios bajo la norma{' '}
-                    <span className="text-purple-400 font-semibold">ISO 15189</span>.
-                    Creador del motor analítico{' '}
-                    <span className="text-blue-400 font-semibold">Paciéntum</span>.
+                <p className="text-slate-400 text-lg md:text-xl leading-relaxed max-w-3xl" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Especialista en la convergencia de{' '}
+                    <span className="text-white font-semibold text-slate-900 dark:text-white">Sistemas de Gestión de Calidad (ISO 9001:2015)</span>{' '}
+                    y arquitectura de software escalable. Experto en el dominio de{' '}
+                    <span className="text-white font-semibold text-slate-900 dark:text-white">flujos de trabajo, automatizaciones, control documental, normatividad y trazabilidad</span>{' '}
+                    clínica. Diseño soluciones tecnológicas como{' '}
+                    <span className="text-white font-semibold text-slate-900 dark:text-white">Pacientum</span>, donde el rigor científico se une a la eficiencia digital para optimizar operaciones y garantizar la{' '}
+                    <span className="text-white font-semibold text-slate-900 dark:text-white">seguridad del paciente</span>.
                 </p>
 
                 {/* CTA Buttons */}
                 <div className="flex flex-wrap gap-4 mt-2">
-                    <button className="px-8 py-3.5 bg-white text-[#0a0f18] font-bold rounded-lg text-sm tracking-wide hover:bg-slate-200 transition-all duration-300 flex items-center gap-2 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
-                        <span className="material-symbols-outlined text-[18px]">play_arrow</span>
-                        Inicializar Storyboard
-                    </button>
-                    <button className="px-8 py-3.5 border border-slate-600 text-slate-300 font-medium rounded-lg text-sm tracking-wide hover:border-slate-400 hover:text-white transition-all duration-300 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-[18px]">schema</span>
-                        Ver Arquitectura
-                    </button>
+                    <a
+                        href="#vault"
+                        className="px-8 py-3.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold rounded-lg text-sm tracking-wide transition-all duration-300 flex items-center gap-2 shadow-lg shadow-blue-500/20"
+                    >
+                        <span className="material-symbols-outlined text-[18px]">local_library</span>
+                        Explorar la Bóveda Clínica
+                    </a>
+                    <a
+                        href="#contacto"
+                        className="px-8 py-3.5 border border-slate-600 text-slate-300 font-medium rounded-lg text-sm tracking-wide hover:border-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center gap-2"
+                    >
+                        <span className="material-symbols-outlined text-[18px]">mail</span>
+                        Contactar
+                    </a>
                 </div>
             </section>
 
