@@ -13,6 +13,18 @@ export default function DeploymentHistory() {
             color: 'emerald',
         },
         {
+            id: 'deploy-002-vault',
+            hash: 'd8a7c2b',
+            status: 'RUNNING',
+            title: 'Lead Architect & Developer // HealthTech Executive Vault',
+            date: 'Production / Live',
+            branch: 'production',
+            tags: ['React', 'Tailwind CSS', 'Firebase', 'Git'],
+            description:
+                'Desarrollo de una Single Page Application (SPA) para la gestión de identidad corporativa. Arquitectura basada en componentes con un CMS personalizado en tiempo real (Firestore), sistema de divulgación progresiva para credenciales y despliegue continuo (CI/CD) de alta disponibilidad.',
+            color: 'blue',
+        },
+        {
             id: 'deploy-002',
             hash: 'b4d1e8a',
             status: 'RUNNING',

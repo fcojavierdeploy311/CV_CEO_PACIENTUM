@@ -8,9 +8,9 @@ export default function SystemOverview() {
             icon: 'verified',
         },
         {
-            value: '15189',
+            value: 'Multi-Norma',
             label: 'Arquitectura SGC',
-            sublabel: 'Trazabilidad Total',
+            sublabel: 'ISO 9001 • 15189 • NOM-007',
             color: 'blue',
             icon: 'shield',
         },
@@ -69,24 +69,24 @@ export default function SystemOverview() {
 
                 {/* Main Title */}
                 <h1
-                    className="text-4xl md:text-5xl lg:text-6xl text-white font-extrabold leading-[1.1] tracking-tight max-w-4xl"
+                    className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[0.95] max-w-5xl"
                     style={{ fontFamily: 'Space Grotesk, sans-serif' }}
                 >
-                    Q. Francisco Javier{' '}
-                    <span className="block mt-2 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent text-3xl md:text-4xl lg:text-5xl">
-                        HealthTech Architect & Clinical Operations Leader
+                    <span className="bg-gradient-to-r from-purple-400 via-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                        Q. Francisco Javier
                     </span>
+                    <span className="text-slate-500 font-medium whitespace-nowrap"> // </span>
+                    <span className="text-white">HealthTech Architect & Clinical Operations Leader</span>
                 </h1>
 
                 {/* Subtitle */}
                 <p className="text-slate-400 text-lg md:text-xl leading-relaxed max-w-3xl" style={{ fontFamily: 'Inter, sans-serif' }}>
                     Especialista en la convergencia de{' '}
-                    <span className="text-white font-semibold text-slate-900 dark:text-white">Sistemas de Gestión de Calidad (ISO 9001:2015)</span>{' '}
+                    <span className="text-white font-semibold">Sistemas de Gestión de Calidad (ISO 9001, ISO 15189 y NOM-007)</span>{' '}
                     y arquitectura de software escalable. Experto en el dominio de{' '}
-                    <span className="text-white font-semibold text-slate-900 dark:text-white">flujos de trabajo, automatizaciones, control documental, normatividad y trazabilidad</span>{' '}
-                    clínica. Diseño soluciones tecnológicas como{' '}
-                    <span className="text-white font-semibold text-slate-900 dark:text-white">Pacientum</span>, donde el rigor científico se une a la eficiencia digital para optimizar operaciones y garantizar la{' '}
-                    <span className="text-white font-semibold text-slate-900 dark:text-white">seguridad del paciente</span>.
+                    <span className="text-white font-semibold">flujos de trabajo, automatizaciones, control documental y trazabilidad clínica</span>. Diseño soluciones tecnológicas como{' '}
+                    <span className="text-white font-semibold">Pacientum</span>, donde el rigor normativo y científico se une a la eficiencia digital para optimizar operaciones y garantizar la{' '}
+                    <span className="text-white font-semibold">seguridad del paciente</span>.
                 </p>
 
                 {/* CTA Buttons */}
@@ -135,7 +135,7 @@ export default function SystemOverview() {
 
                                 {/* Value */}
                                 <p
-                                    className={`text-6xl md:text-7xl font-extrabold ${a.text} leading-none tracking-tighter`}
+                                    className={`${m.value.length > 5 ? 'text-3xl md:text-4xl' : 'text-6xl md:text-7xl'} font-extrabold ${a.text} leading-none tracking-tighter`}
                                     style={{ fontFamily: 'Space Grotesk, monospace' }}
                                 >
                                     {m.value}
